@@ -14,6 +14,9 @@ body, html {
   font-family: 'Source Sans Pro', sans-serif;
   background: #69009e; }
 
+#root {
+  height: 100vh; }
+
 .chat-app {
   position: absolute;
   top: 50%;
