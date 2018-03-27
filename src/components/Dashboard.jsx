@@ -47,17 +47,15 @@ class Dashboard extends Component{
     const { data } = this.state;
 
     return(
-      <div className="speech-recog-dashboard">
       <div className="chat-app">
 				<MessageList data={ data } />
 				<div className="message-form">
 					<form onSubmit={this._handleSubmit}>
 					  <input ref="inputMessage" type="text" placeholder="Type a message..."/>
-						<button><i className="fa fa-paper-plane"></i></button>
+						<button><i className="fa fa-microphone"></i></button>
 					</form>
 				</div>
 			</div>
-      </div>
     );
   }
 }
