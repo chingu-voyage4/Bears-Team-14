@@ -1,0 +1,187 @@
+@import 'https://fonts.googleapis.com/css?family=Source+Sans+Pro';
+
+// variables
+
+// change the accent value owned your theme
+$accent: hsl(280deg, 100%, 26%) !default;
+
+$color: '';
+@if(lightness($accent) < 50) {
+	$color: lighten($accent, 80%);
+} @else {
+	$color: darken($accent, 60%);
+}
+
+$accentColor: $color;
+$borderRadius: 3px;
+$borderRadiusMessage: 15px;
+
+* {
+	box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+    width: 3px;
+}
+ 
+::-webkit-scrollbar-track {
+
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+	background: lighten($accent, 10%);
+}
+
+body, html {
+	font-size: 14px;
+	font-family: 'Source Sans Pro', sans-serif;
+	background: lighten($accent, 5%);
+}
+
+.chat-app {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 70%;
+	height: 80vh;
+	max-width: 800px;
+	background: $accent;
+	box-shadow: 0px 40px 70px rgba(0,0,0,0.4);
+	
+	.message-container {
+		position: relative;
+		padding: 10px;
+		height: calc(100% - 55px);
+		background: darken($accent, 2%);
+		overflow-y: auto;
+		box-shadow: inset 0px 10px 70px rgba(0,0,0,0.1);
+		
+		&:before, &:after {
+			content: '';
+			display: table;
+		}
+		
+		&:after {
+			clear: both;
+		}
+		
+		.time-float {
+			position: fixed;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%);
+			padding: 5px 15px;
+			margin-top: 10px;
+			font-size: 0.7em;
+			color: $accentColor;
+			background: lighten($accent, 5%);
+			border-radius: $borderRadiusMessage;
+			opacity: 0.8;
+			animation: flyIn 0.4s ease-in-out;
+		}
+	}
+	
+	.message {
+		padding: 2px 20px;
+		
+		&:before, &:after {
+			content: '';
+			display: table;
+		}
+		
+		&:after {
+			clear: both;
+		}
+		
+		.user {
+			padding: 12px 15px;
+			background: lighten($accent , 20%);
+			color: $accentColor;
+			border-radius: $borderRadiusMessage;
+			font-size: 0.9em;
+			min-width: 30px;
+			tranisition: all 0.4s ease-in-out;
+			
+			&.left {
+				float: left;
+			}
+			
+			&.right {
+				float: right;
+			}
+		}
+	}
+	
+	.message-form {
+		position: relative;
+		padding: 5px;
+		background: $accent;
+
+		input[type="text"], button {
+			background: $accent;
+			line-height: 25px;
+			font-size: 1em;
+			padding: 10px 20px;
+			outline: none;
+			border: 0;
+			border-radius: $borderRadius;
+			transition: all 0.4s ease-in-out;
+			color: $accentColor;
+		}
+		
+		input[type="text"] {
+			width: calc(100% - 64px);
+			
+			&::placeholder {
+				color: darken($accentColor, 10%);
+			}
+		}
+		
+		button {
+			width: 59px;
+			cursor: pointer;
+			margin-left: 5px;
+		}
+	}
+}
+
+.meta {
+	background: #52057a
+}
+
+.single-pen {
+	border-color: #52057a
+}
+
+.theme {
+	position: fixed;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	background: darken($accent, 5%);
+	
+	> div {
+		width: 40px;
+		height: 40px;
+		background: #fff;
+		margin: 10px;
+	}
+}
+
+@keyframes flyIn {
+	from {
+		top: -10px;
+		opacity: 0;
+	}
+}
+
+
+@-webkit-keyframes flyIn {
+	from {
+		top: -10px;
+		opacity: 0;
+	}
+}
+
