@@ -39,6 +39,10 @@ body, html {
 	background: lighten($accent, 5%);
 }
 
+#root{
+	height: 100vh;
+}
+
 .chat-app {
 	position: absolute;
 	top: 50%;
