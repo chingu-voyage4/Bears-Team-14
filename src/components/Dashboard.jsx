@@ -18,12 +18,149 @@ class Dashboard extends Component {
 
     this._handleSpeechListening = this._handleSpeechListening.bind(this);
     this._handleSpeechResponse = this._handleSpeechResponse.bind(this);
-	}
-	
-	/**
-	 * Method to start listening user's voice command and append the previous 
-	 * message states
-	 */
+    this.parseSpeech = this.parseSpeech.bind(this);
+    this.searchTerm = this.searchTerm.bind(this);
+    this.openSite = this.openSite.bind(this);
+    this.greeting = this.greeting.bind(this);
+  }
+
+  /**
+   * Method to update is the request is a greeting
+   * @param {*} speech
+   */
+  greeting(speech) {
+    this.setState({ message: "Hello! What can I do for you ?" });
+
+      const newMessage = {
+        text: "Hello! What can I do for you ?",
+        id: Date.now(),
+        class: this.state.class
+      };
+
+      this.setState(prevState => ({
+        data: prevState.data.concat(newMessage),
+        message: ""
+      }));
+  }
+
+  /**
+   * Allow google search for the recognised term if that is the question
+   * @param {*} speech
+   */
+  searchTerm(speech) {
+    var win = window.open(
+      "https://www.google.co.in/search?q=" + speech,
+      "_blank"
+    );
+    if (win) {
+      //Browser has allowed it to be opened
+      win.focus();
+    } else {
+      //Browser has blocked it
+      alert("Please allow popups for this website");
+    }
+  }
+
+  /**
+   * Method to open sites if the speech said so
+   * @param {*} speech
+   */
+  openSite(speech) {
+    var words = speech.split(" ");
+    for (var i = 0; i < words.length; i++) {
+      if (words[i].indexOf(".") !== -1) {
+        var win = window.open("https://" + words[i], "_blank");
+        if (win) {
+          //Browser has allowed it to be opened
+          win.focus();
+        } else {
+          //Browser has blocked it
+          alert("Please allow popups for this website");
+        }
+        return;
+      }
+    }
+    this.searchTerm(speech);
+  }
+
+  /**
+   * Checks what the speech exactly means
+   * @param {*} speech
+   */
+  parseSpeech(speech) {
+    // Check if speech is a question
+    var questionKeywords = [
+      "who",
+      "what",
+      "when",
+      "where",
+      "why",
+      "how",
+      "is",
+      "can",
+      "does",
+      "do",
+      "search",
+      "find",
+      "look"
+    ];
+    for (var i = 0; i < questionKeywords.length; i++) {
+      if (speech.indexOf(questionKeywords[i]) !== -1) {
+        this.searchTerm(speech);
+        return;
+      }
+    }
+    // Check if speech is a command to open website
+    var openKeywords = ["open", "navigate", "browse", "take"];
+    for (var j = 0; j < openKeywords.length; j++) {
+      if (speech.indexOf(openKeywords[j]) !== -1) {
+        this.openSite(speech);
+        return;
+      }
+    }
+    // Star Wars Easter Egg
+    if (speech === "hello there") {
+      this.setState({ message: "General Kenobi, You are a bold one!" });
+
+      const newMessage = {
+        text: "General Kenobi, You are a bold one!",
+        id: Date.now(),
+        class: this.state.class
+      };
+      this.setState(prevState => ({
+        data: prevState.data.concat(newMessage),
+        message: ""
+      }));
+      return;
+    }
+
+    // Check if speech is a greeting
+    var greetKeywords = ["hi", "hello", "hey"];
+    for (var k = 0; k < greetKeywords.length; i++) {
+      if (speech.indexOf(greetKeywords[k]) !== -1) {
+        this.greeting(speech);
+        return;
+      }
+    }
+    // If none of the above conditions are met
+    this.setState({ message: "Sorry, I can not understand that, yet." });
+
+      const newMessage = {
+        text: "Sorry, I can not understand that, yet.",
+        id: Date.now(),
+        class: this.state.class
+      };
+
+      this.setState(prevState => ({
+        data: prevState.data.concat(newMessage),
+        message: ""
+      }));
+  }
+
+  /**
+   * Method to start listening user's voice command and append the previous
+   * message states
+   */
   _handleSpeechResponse() {
     const SpeechRecognition =
       window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -38,15 +175,6 @@ class Dashboard extends Component {
     recognition.maxAlternatives = 1;
 
     recognition.start();
-
-    const sitesList = ["twitter", "reddit", "facebook", "youtube", "wikipedia"];
-    const sitesURL = [
-      "https://twitter.com",
-      "https://reddit.com",
-      "https://facebook.com",
-      "https://youtube.com",
-      "https://wikipedia.org"
-    ];
     const self = this;
 
     recognition.onresult = function(event) {
@@ -66,22 +194,7 @@ class Dashboard extends Component {
       }));
 
       console.log("Confidence: " + event.results[0][0].confidence);
-
-      if (speechResult.toLowerCase().indexOf("open") !== -1) {
-        const siteIndex = sitesList.indexOf(
-          speechResult.toLowerCase().slice(5)
-        );
-        if (siteIndex >= 0) {
-          const win = window.open(sitesURL[siteIndex], "_blank");
-          if (win) {
-            //Browser has allowed it to be opened
-            win.focus();
-          } else {
-            //Browser has blocked it
-            alert("Please allow popups for this website");
-          }
-        }
-      }
+      self.parseSpeech(speechResult.toLowerCase());
     };
 
     recognition.onspeechend = function() {
@@ -110,12 +223,11 @@ class Dashboard extends Component {
     };
   }
 
-
-	/**
-	 * Method over the form submission to start the button listening to the user's
-	 * speech, sets the status of islistening to be true
-	 * @param {*} event 
-	 */
+  /**
+   * Method over the form submission to start the button listening to the user's
+   * speech, sets the status of islistening to be true
+   * @param {*} event
+   */
   _handleSpeechListening(event) {
     event.preventDefault();
 
@@ -140,7 +252,7 @@ class Dashboard extends Component {
               placeholder="Click on the button to start listening..."
               value={isListening ? "Listening..." : ""}
             />
-            <button type="submit" >
+            <button type="submit">
               <i className="fa fa-microphone" />
             </button>
           </form>
