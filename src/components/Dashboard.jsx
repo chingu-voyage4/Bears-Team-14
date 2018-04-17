@@ -136,7 +136,7 @@ class Dashboard extends Component {
 
     // Check if speech is a greeting
     var greetKeywords = ["hi", "hello", "hey"];
-    for (var k = 0; k < greetKeywords.length; i++) {
+    for (var k = 0; k < greetKeywords.length; k++) {
       if (speech.indexOf(greetKeywords[k]) !== -1) {
         this.greeting(speech);
         return;
