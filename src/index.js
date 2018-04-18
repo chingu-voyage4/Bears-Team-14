@@ -21,5 +21,9 @@ import registerServiceWorker from './registerServiceWorker';
 
 
 // ======================= { Initial rendering } ===================== //
+
+setTimeout(() => {
 ReactDOM.render(<App />, document.getElementById('root'));
+}, 2000);
+
 registerServiceWorker();
